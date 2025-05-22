@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
 // Conexión a la base de datos
-$conexion = new mysqli("10.110.6.148", "adminweb", "sysadm1n220793", "mantenimientos");
+$conexion = new mysqli("10.110.6.148", "BaseDatos", "sysadm1n2207", "mantenimientos");
 
 if ($conexion->connect_error) {
     echo json_encode([

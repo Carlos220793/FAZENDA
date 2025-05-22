@@ -800,6 +800,7 @@
     usuario: "Administrador",
     clave: "sysadm1n"
   };
+  const API_BASE = "http://10.110.6.148/mantenimiento/";
 
   // Variables de estado
   let registros = [];
@@ -830,21 +831,23 @@
   const videoFondo = document.getElementById('video-fondo');
 
   function sincronizarRegistros() {
-  fetch("http://localhost/mantenimiento/obtener_registros.php")
-    .then(res => res.json())
-    .then(data => {
-      registros = data;
-      if (currentSection === 'registrar') {
-        renderizarRegistros();
-      } else {
-        buscarRegistros();
-      }
-      actualizarEstadisticas();
-    })
-    .catch(err => {
-      console.error("Error al sincronizar registros:", err);
-      alert("❌ Error al conectar con la base de datos");
-    });
+    
+  fetch(API_BASE + "obtener_registros.php")
+  .then(res => res.json())
+  .then(data => {
+    registros = data;
+    if (currentSection === 'registrar') {
+      renderizarRegistros();
+    } else {
+      buscarRegistros();
+    }
+    actualizarEstadisticas();
+  })
+  .catch(err => {
+    console.error("Error al sincronizar registros:", err);
+    alert("❌ Error al conectar con la base de datos");
+  });
+
 }
     // Inicialización
    document.addEventListener('DOMContentLoaded', () => {
@@ -947,28 +950,28 @@ function agregarRegistro(e) {
     usuarioRegistro: document.getElementById('usuario').value || 'tecnico'
   };
 
-  fetch("http://localhost/mantenimiento/guardar_registro.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(nuevoRegistro)
+ fetch(API_BASE + "guardar_registro.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(nuevoRegistro)
+})
+  .then(res => res.json())
+  .then(data => {
+    console.log("Respuesta del servidor:", data);
+    if (data.success) {
+      alert("✅ " + (data.mensaje || "Guardado correctamente"));
+      formRegistro.reset();
+      document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+      setTimeout(sincronizarRegistros, 2000);
+    } else {
+      alert("❌ Error: " + (data.error || "Respuesta inesperada del servidor"));
+    }
   })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Respuesta del servidor:", data);
-      if (data.success) {
-        alert("✅ " + (data.mensaje || "Guardado correctamente"));
-        formRegistro.reset();
-        document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+  .catch(err => {
+    console.error("Error:", err);
+    alert("❌ Error al guardar el registro");
+  });
 
-        setTimeout(sincronizarRegistros, 2000); // sincroniza desde MySQL
-      } else {
-        alert("❌ Error: " + (data.error || "Respuesta inesperada del servidor"));
-      }
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("❌ Error al guardar el registro");
-    })
 
     }
 
@@ -1226,48 +1229,50 @@ function agregarRegistro(e) {
     observaciones: document.getElementById('edit-observaciones').value
   };
 
-  fetch("http://localhost/mantenimiento/editar_registro.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(registroEditado)
+ fetch(API_BASE + "editar_registro.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(registroEditado)
+})
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert(data.mensaje || "✅ Registro actualizado correctamente");
+      cerrarModal();
+      sincronizarRegistros();
+    } else {
+      alert("❌ Error: " + (data.error || "No se pudo actualizar"));
+    }
   })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert(data.mensaje || "✅ Registro actualizado correctamente");
-        cerrarModal();
-        sincronizarRegistros();
-      } else {
-        alert("❌ Error: " + (data.error || "No se pudo actualizar"));
-      }
-    })
-    .catch(err => {
-      console.error("Error al actualizar:", err);
-      alert("❌ Error al actualizar el registro");
-    });
+  .catch(err => {
+    console.error("Error al actualizar:", err);
+    alert("❌ Error al actualizar el registro");
+  });
+
 }
 
 function eliminarRegistro(id) {
   if (!confirm('¿Estás seguro de eliminar este registro?')) return;
 
-  fetch("http://localhost/mantenimiento/eliminar_registro.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id })
+ fetch(API_BASE + "eliminar_registro.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ id })
+})
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert(data.mensaje || "✅ Registro eliminado correctamente");
+      sincronizarRegistros();
+    } else {
+      alert("❌ Error: " + (data.error || "No se pudo eliminar"));
+    }
   })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert(data.mensaje || "✅ Registro eliminado correctamente");
-        sincronizarRegistros();
-      } else {
-        alert("❌ Error: " + (data.error || "No se pudo eliminar"));
-      }
-    })
-    .catch(err => {
-      console.error("Error al eliminar:", err);
-      alert("❌ Error al eliminar el registro");
-    });
+  .catch(err => {
+    console.error("Error al eliminar:", err);
+    alert("❌ Error al eliminar el registro");
+  });
+
 }
 
 
