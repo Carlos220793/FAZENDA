@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Mantenimiento - IT Solutions</title>
-  <style>
+
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+
+<style>
+    
     /* Reset y estilos generales */
     * {
       box-sizing: border-box;
@@ -569,6 +575,69 @@
         align-items: flex-start;
       }
     }
+    .titulo-con-imagen {
+  position: relative;
+  display: inline-block;
+  padding: 1rem 2rem;
+  z-index: 0;
+}
+
+.titulo-con-imagen h1 {
+  position: relative;
+  z-index: 2;
+  padding-left: 120px;
+  color: #2a0591; /* o blanco si lo necesitas encima de imagen oscura */
+}
+.titulo-con-imagen p {
+  position: relative;
+  z-index: 2;
+  padding-left: 120px;
+  color: #0c0324; /* o blanco si lo necesitas encima de imagen oscura */
+}
+
+.titulo-con-imagen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('logo-aliar.png'); /* Cambia por tu imagen */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left center;
+  opacity: 1; 
+  z-index: 1;
+  pointer-events: none;
+}
+.nav-buttons-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 1rem;
+}
+
+.nav-buttons {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 1rem;
+}
+
+.fondo-fazenda {
+  position: absolute;
+  right: 0;
+  top: -40px;
+  transform: translateY(-50%);
+  max-width: 130px;       /* Ajusta el tamaño */
+  opacity: 1;           /* Visibilidad: 0 = invisible, 1 = completamente visible */
+  z-index: 1;
+  pointer-events: none;   /* No bloquea los botones */
+}
+
+ 
+
   </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -596,15 +665,24 @@
   <!-- Aplicación principal -->
   <div id="app">
     <header class="app-header">
-      <div class="app-title">
+      <div class="titulo-con-imagen">
         <h1>Sistema de Mantenimiento</h1>
         <p>Registro de equipos informáticos</p>
-      </div>
-      <div class="nav-buttons">
-        <button id="btn-registrar">Nuevo Registro</button>
-        <button id="btn-buscar">Buscar</button>
-        <button id="btn-logout" class="logout-btn">Cerrar Sesión</button>
-      </div>
+        <div style="width: 200%; display: flex; justify-content: center;">
+  <p style="color: rgb(206, 214, 200); font-weight: bold; font-size: 1.1rem; margin: 0;">
+    Creador Carlos Escobar
+  </p>
+</div>
+</div>
+<div class="nav-buttons-container">
+  <div class="nav-buttons">
+    <button id="btn-registrar">Nuevo Registro</button>
+    <button id="btn-buscar">Buscar</button>
+    <button id="btn-logout" class="logout-btn">Cerrar Sesión</button>
+  </div>
+  <img src="logo-fazenda.jpg" alt="Fazenda" class="fondo-fazenda">
+</div>
+
     </header>
 
     <!-- Resumen de estadísticas -->
@@ -633,16 +711,108 @@
       <form id="form-registro">
         <div class="form-grid">
           <div class="form-group">
-            <label for="tipo">Tipo de Equipo</label>
-            <input type="text" id="tipo" required>
+            
+  <label for="tipo">Tipo de Equipo</label>
+  <select id="tipo" required></select>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tiposEquipo = [
+    "Computador portátil",
+    "Computador de escritorio",
+    "Impresora",
+    "Teléfono IP",
+    "Tablet",
+    "Radio de comunicación",
+    "Router / Switch",
+    "Cámara de seguridad",
+    "Proyector",
+    "Otro..."
+  ];
+
+  const selectTipo = document.getElementById('tipo');
+  selectTipo.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  selectTipo.appendChild(placeholder);
+
+  tiposEquipo.forEach(tipo => {
+    const option = document.createElement('option');
+    option.value = tipo;
+    option.textContent = tipo;
+    selectTipo.appendChild(option);
+  });
+
+  new Choices(selectTipo, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+<div class="form-group">
+            <label for="placa">Placa/Identificacion</label>
+            <input type="text" id="serial" required>
           </div>
           <div class="form-group">
-            <label for="placa">Placa/Identificación</label>
-            <input type="text" id="placa" required>
-          </div>
-          <div class="form-group">
-            <label for="marca">Marca/Modelo</label>
-            <input type="text" id="marca" required>
+         <label for="marca">Marca/Modelo</label>
+<select id="marca" placeholder="Selecciona o escribe" required></select>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const marcas = [
+    "R2", "Motorola R2", "Lenovo v14", "Lenovo Thinkpad", "Motorola DEP450",
+    "Canon G6010", "HP ProBook", "Dell Latitude", "Otro...", "LENOVO"
+  ];
+
+  const select = document.getElementById('marca');
+
+  select.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder); // ⬅️ Este es el que faltaba
+
+  marcas.forEach(marca => {
+    const option = document.createElement('option');
+    option.value = marca;
+    option.textContent = marca;
+    select.appendChild(option);
+  });
+
+  new Choices(select, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+
+</select>
           </div>
           <div class="form-group">
             <label for="serial">Número de Serie</label>
@@ -654,7 +824,14 @@
           </div>
           <div class="form-group">
             <label for="tecnico">Técnico Responsable</label>
-            <input type="text" id="tecnico" required>
+           <select id="tecnico" required>
+  <option value="">Seleccionar...</option>
+  <option value="Carlos Escobar">Wuilmer Andres Roman</option>
+  <option value="Laura Torres">Bicol Cardenaz</option>
+  <option value="Juan Martínez">Johel Garnica </option>
+  <option value="Ana Gómez">Jesus Ricardo </option>
+   <option value="Ana Gómez">Carlos Escobar </option>
+</select>
           </div>
           <div class="form-group">
             <label for="tipo-mantenimiento">Tipo de Mantenimiento</label>
@@ -662,6 +839,7 @@
               <option value="">Seleccionar...</option>
               <option value="Preventivo">Preventivo</option>
               <option value="Correctivo">Correctivo</option>
+              <option value="Preventivo">Preventivo / Correctivo</option>
             </select>
           </div>
           <div class="form-group">
@@ -674,8 +852,53 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="ubicacion">Ubicación</label>
-            <input type="text" id="ubicacion" required>
+
+<label for="ubicacion">Ubicación</label>
+<select id="ubicacion" name="ubicacion" required></select>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const ubicaciones = [
+    "Admin Fincas", "Gestión Humana", "Tecnología", "Mantenimiento", "Agricultura", "Taller",
+    "Logística", "Porcicultura", "Bioprocesos", "Proyectos", "Planta Extractora",
+    "Planta Balanceados FZ", "Planta Balanceados BARL", "Planta Secamiento FZ", "Planta Secamiento BARL"
+  ];
+
+  const select = document.getElementById('ubicacion');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+
+  ubicaciones.forEach(u => {
+    const option = document.createElement('option');
+    option.value = u;
+    option.textContent = u;
+    select.appendChild(option);
+  });
+
+  new Choices(select, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+
           </div>
           <div class="form-group">
             <label for="centro-costo">Centro de Costo</label>
@@ -731,7 +954,50 @@
         <div class="form-grid">
           <div class="form-group">
             <label for="edit-tipo">Tipo de Equipo</label>
-            <input type="text" id="edit-tipo" required>
+       <select id="edit-tipo" required></select>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tiposEquipo = [
+    "Computador portátil", "Computador de escritorio", "Impresora",
+    "Teléfono IP", "Tablet", "Radio de comunicación", "Router / Switch",
+    "Cámara de seguridad", "Proyector", "Otro..."
+  ];
+
+  const select = document.getElementById('edit-tipo');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+
+  tiposEquipo.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item;
+    option.textContent = item;
+    select.appendChild(option);
+  });
+
+  new Choices(select, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+
           </div>
           <div class="form-group">
             <label for="edit-placa">Placa/Identificación</label>
@@ -739,7 +1005,51 @@
           </div>
           <div class="form-group">
             <label for="edit-marca">Marca/Modelo</label>
-            <input type="text" id="edit-marca" required>
+            <select id="edit-marca" required></select>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const marcas = [
+    "R2", "Motorola R2", "Lenovo v14", "Lenovo Thinkpad", "Motorola DEP450",
+    "Canon G6010", "HP ProBook", "Dell Latitude", "Otro...", "LENOVO"
+  ];
+
+  const select = document.getElementById('edit-marca');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+
+  marcas.forEach(marca => {
+    const option = document.createElement('option');
+    option.value = marca;
+    option.textContent = marca;
+    select.appendChild(option);
+  });
+
+  new Choices(select, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+
+
           </div>
           <div class="form-group">
             <label for="edit-serial">Número de Serie</label>
@@ -751,7 +1061,51 @@
           </div>
           <div class="form-group">
             <label for="edit-tecnico">Técnico Responsable</label>
-            <input type="text" id="edit-tecnico" required>
+            <select id="edit-tecnico" required></select>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tecnicos = [
+    "Carlos Escobar", "Wuilmer Andres Roman", "Bicol Cardenaz",
+    "Johel Garnica", "Jesus Ricardo"
+  ];
+
+  const select = document.getElementById('tecnico');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+
+  tecnicos.forEach(nombre => {
+    const option = document.createElement('option');
+    option.value = nombre;
+    option.textContent = nombre;
+    select.appendChild(option);
+  });
+
+  new Choices(select, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+
+
           </div>
           <div class="form-group">
             <label for="edit-tipo-mantenimiento">Tipo de Mantenimiento</label>
@@ -770,7 +1124,52 @@
           </div>
           <div class="form-group">
             <label for="edit-ubicacion">Ubicación</label>
-            <input type="text" id="edit-ubicacion" required>
+           <select id="edit-ubicacion" required></select>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const ubicaciones = [
+    "Admin Fincas", "Gestión Humana", "Tecnología", "Mantenimiento", "Agricultura", "Taller",
+    "Logística", "Porcicultura", "Bioprocesos", "Proyectos", "Planta Extractora",
+    "Planta Balanceados FZ", "Planta Balanceados BARL", "Planta Secamiento FZ", "Planta Secamiento BARL"
+  ];
+
+  const select = document.getElementById('edit-ubicacion');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+
+  ubicaciones.forEach(u => {
+    const option = document.createElement('option');
+    option.value = u;
+    option.textContent = u;
+    select.appendChild(option);
+  });
+
+  new Choices(select, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+
+
           </div>
           <div class="form-group">
             <label for="edit-centro-costo">Centro de Costo</label>
@@ -858,14 +1257,16 @@
   // Mostrar video al inicio
   videoFondo.style.display = 'block';
 
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  if (isLoggedIn === 'true') {
-    videoFondo.style.display = 'none';
-    loginContainer.style.display = 'none';
-    appContainer.style.display = 'block';
+  
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+if (isLoggedIn === 'true') {
+  videoFondo.style.display = 'none';
+  loginContainer.style.display = 'none';
+  appContainer.style.display = 'block';
 
-    sincronizarRegistros(); // Primera sincronización al cargar
-  }
+  sincronizarRegistros(); // Primera sincronización al cargar
+}
+
 
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('fecha').value = today;
@@ -889,31 +1290,33 @@
 
     // Funciones
     function handleLogin(e) {
-      e.preventDefault();
-      const usuario = document.getElementById('usuario').value;
-      const clave = document.getElementById('clave').value;
+  e.preventDefault();
+  const usuario = document.getElementById('usuario').value;
+  const clave = document.getElementById('clave').value;
 
-      if (usuario === CREDENCIALES.usuario && clave === CREDENCIALES.clave) {
-        videoFondo.style.display = 'none';
-        localStorage.setItem('isLoggedIn', 'true');
-        loginContainer.style.display = 'none';
-        appContainer.style.display = 'block';
-        actualizarEstadisticas();
-        sincronizarRegistros();
-      } else {
-        errorLogin.textContent = 'Usuario o contraseña incorrectos';
-      }
-    }
+  if (usuario === CREDENCIALES.usuario && clave === CREDENCIALES.clave) {
+    videoFondo.style.display = 'none';
+    sessionStorage.setItem('isLoggedIn', 'true'); // ← CAMBIADO A sessionStorage
+    loginContainer.style.display = 'none';
+    appContainer.style.display = 'block';
+    actualizarEstadisticas();
+    sincronizarRegistros();
+  } else {
+    errorLogin.textContent = 'Usuario o contraseña incorrectos';
+  }
+}
+
 
     function handleLogout() {
-      videoFondo.style.display = 'block';
-      localStorage.removeItem('isLoggedIn');
-      loginContainer.style.display = 'flex';
-      appContainer.style.display = 'none';
-      document.getElementById('usuario').value = '';
-      document.getElementById('clave').value = '';
-      errorLogin.textContent = '';
-    }
+  videoFondo.style.display = 'block';
+  sessionStorage.removeItem('isLoggedIn'); // ← CAMBIADO A sessionStorage
+  loginContainer.style.display = 'flex';
+  appContainer.style.display = 'none';
+  document.getElementById('usuario').value = '';
+  document.getElementById('clave').value = '';
+  errorLogin.textContent = '';
+}
+
 
     function cambiarSeccion(seccion) {
       if (seccion === currentSection) return;
