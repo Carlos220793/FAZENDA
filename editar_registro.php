@@ -30,14 +30,15 @@ if (!isset($datos['id'])) {
 
 // Preparar y ejecutar la actualización
 $stmt = $conexion->prepare("UPDATE registros SET 
-    tipo = ?, placa = ?, marca = ?, serial = ?, fecha = ?, tecnico = ?, tipo_mantenimiento = ?, estado = ?, ubicacion = ?, centro_costo = ?, url_ticket = ?, observaciones = ?
+    tipo = ?, placa = ?, marca = ?, modelo = ?, serial = ?, fecha = ?, tecnico = ?, tipo_mantenimiento = ?, estado = ?, ubicacion = ?, centro_costo = ?, url_ticket = ?, observaciones = ?
     WHERE id = ?");
 
 $stmt->bind_param(
-    "ssssssssssssi",
+    "sssssssssssssi",
     $datos['tipo'],
     $datos['placa'],
     $datos['marca'],
+     $datos['modelo'],
     $datos['serial'],
     $datos['fecha'],
     $datos['tecnico'],
@@ -53,7 +54,7 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     echo json_encode([
         'success' => true,
-        'mensaje' => 'Registro actualizado correctamente'
+        'mensaje' => '✅Registro actualizado correctamente'
     ]);
 } else {
     echo json_encode([

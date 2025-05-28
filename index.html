@@ -585,28 +585,28 @@
 .titulo-con-imagen h1 {
   position: relative;
   z-index: 2;
-  padding-left: 120px;
+  padding-left: 150px;
   color: #2a0591; /* o blanco si lo necesitas encima de imagen oscura */
 }
 .titulo-con-imagen p {
   position: relative;
   z-index: 2;
-  padding-left: 120px;
+  padding-left: 150px;
   color: #0c0324; /* o blanco si lo necesitas encima de imagen oscura */
 }
 
 .titulo-con-imagen::before {
   content: "";
   position: absolute;
-  top: -50px;
-  left: 0;
-  width: 150%;
-  height: 150%;
-  background-image: url('logo-aliar.png'); /* Cambia por tu imagen */
-  background-size: contain;
+  top: -40px;
+  margin-left: -80px;
+  width: 230px;               /* Mismo ancho */
+  height: 220px;              /* que el alto (círculo) */
+  background-image: url('logo-aliar.png'); /* Ruta de tu imagen */
+  background-size: cover;    /* Asegura que llene el círculo */
   background-repeat: no-repeat;
-  background-position: left center;
-  opacity: 1; 
+  background-position: center;
+  border-radius: 50%;        /* Hace que sea redonda */
   z-index: 1;
   pointer-events: none;
 }
@@ -618,25 +618,19 @@
   padding-right: 1rem;
 }
 
-.nav-buttons {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  gap: 1rem;
+.choices__item--choice {
+  white-space: nowrap;       /* Evita salto de línea */
+  overflow: hidden;          /* Oculta texto que se desborde */
+  max-width: 250%;           /* Limita al ancho del contenedor */
 }
 
-.fondo-fazenda {
-  position: absolute;
-  right: 0;
-  top: -20px;
-  transform: translateY(-50%);
-  max-width: 190px;       /* Ajusta el tamaño */
-  opacity: 0.5;           /* Visibilidad: 0 = invisible, 1 = completamente visible */
-  z-index: 1;
-  pointer-events: none;   /* No bloquea los botones */
+.mensaje-vacio {
+  color: #e74c3c;         /* Rojo moderno */
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-top: 1rem;
 }
-
- 
 
   </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -651,7 +645,7 @@
   <!-- Pantalla de Login -->
   <div class="login-container" id="login">
     <div class="login-box">
-      <h2>Sistema de Mantenimiento</h2>
+      <h2>Mantenimientos Tecnologia</h2>
       <p style="margin-bottom: 1.5rem; color: #666;">Ingrese sus credenciales para acceder</p>
       <form id="login-form">
         <input type="text" id="usuario" placeholder="Usuario" required>
@@ -666,7 +660,7 @@
   <div id="app">
     <header class="app-header">
       <div class="titulo-con-imagen">
-        <h1>Sistema de Mantenimiento</h1>
+        <h1>Mantenimientos Tecnologia</h1>
         <p>Registro de equipos informáticos</p>
         <div style="width: 200%; display: flex; justify-content: center;">
   <p style="color: rgb(206, 214, 200); font-weight: bold; font-size: 1.1rem; margin: 0;">
@@ -680,26 +674,25 @@
     <button id="btn-buscar">Buscar</button>
     <button id="btn-logout" class="logout-btn">Cerrar Sesión</button>
   </div>
-  <img src="logo-fazenda.jpg" alt="Fazenda" class="fondo-fazenda">
 </div>
 
     </header>
 
-    <!-- Resumen de estadísticas -->
+
     <div class="stats-container">
-      <div class="stat-card">
+      <div class="stat-card" onclick="verTodosLosRegistros()">
         <h3>Total Registros</h3>
         <p id="total">0</p>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" onclick="verPendientes()">
         <h3>Pendientes</h3>
         <p id="pendientes">0</p>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" onclick="verEnProgreso()">
         <h3>En Progreso</h3>
         <p id="en-progreso">0</p>
       </div>
-      <div class="stat-card">
+     <div class="stat-card" onclick="verFinalizados()">
         <h3>Finalizados</h3>
         <p id="finalizados">0</p>
       </div>
@@ -763,39 +756,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+            <div class="form-group">
+  <label for="placa">Placa/Identificacion</label>
+  <input type="text" id="placa" required>
+</div>
 <div class="form-group">
-            <label for="placa">Placa/Identificacion</label>
-            <input type="text" id="serial" required>
-          </div>
-          <div class="form-group">
-         <label for="marca">Marca/Modelo</label>
-<select id="marca" placeholder="Selecciona o escribe" required></select>
+  <label for="marca">Marca</label>
+  <select id="marca" required></select>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const marcas = [
-    "R2", "Motorola R2", "Lenovo v14", "Lenovo Thinkpad", "Motorola DEP450",
-    "Canon G6010", "HP ProBook", "Dell Latitude", "Otro...", "LENOVO"
+     "Hytera", "Motorola", "Lenovo","Dell","Lenovo Mesa","Epson",
+    "Canon", "HP", "Dell Latitude","Ups Powest","Ups Legrand","Ups Unipower","Otro..."
   ];
 
-  const select = document.getElementById('marca');
+  const selectMarca = document.getElementById('marca');
+  if (!selectMarca) return;
 
-  select.innerHTML = '';
+  selectMarca.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
   placeholder.textContent = 'Seleccionar...';
   placeholder.disabled = true;
   placeholder.selected = true;
-  select.appendChild(placeholder); // ⬅️ Este es el que faltaba
+  selectMarca.appendChild(placeholder);
 
   marcas.forEach(marca => {
     const option = document.createElement('option');
     option.value = marca;
     option.textContent = marca;
-    select.appendChild(option);
+    selectMarca.appendChild(option);
   });
 
-  new Choices(select, {
+  new Choices(selectMarca, {
     placeholderValue: 'Seleccionar...',
     searchPlaceholderValue: 'Buscar o escribir...',
     searchEnabled: true,
@@ -812,6 +807,54 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<div class="form-group">
+  <label for="modelo">Modelo</label>
+  <select id="modelo" required></select>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modelos = [
+      "E14", "Thinkcentre M", "V50S", "M705", "R2", "BD506", "DEP-250", "v14", "Thinkpad",
+      "DEP-450", "G6010", "ProBook", "Latitude", "1kva", "2kva", "3kva",
+      "M428fdw", "M130fw", "M426fdw", "M428", "Otro..."
+    ];
+
+    const selectModelo = document.getElementById('modelo');
+    if (!selectModelo) return;
+
+    selectModelo.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Seleccionar...';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    selectModelo.appendChild(placeholder);
+
+    modelos.forEach(modelo => {
+      const option = document.createElement('option');
+      option.value = modelo;
+      option.textContent = modelo;
+      selectModelo.appendChild(option);
+    });
+
+    new Choices(selectModelo, {
+      placeholderValue: 'Seleccionar...',
+      searchPlaceholderValue: 'Buscar o escribir...',
+      searchEnabled: true,
+      removeItemButton: true,
+      addItems: true,
+      duplicateItemsAllowed: false,
+      editItems: true,
+      addItemFilter: () => true,
+      addItemText: (value) => `Usar: "${value}"`,
+      noResultsText: 'No encontrado',
+      noChoicesText: 'Sin opciones',
+      shouldSort: false
+    });
+  });
+  </script>
+
+
 </select>
           </div>
           <div class="form-group">
@@ -826,11 +869,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <label for="tecnico">Técnico Responsable</label>
            <select id="tecnico" required>
   <option value="">Seleccionar...</option>
-  <option value="Carlos Escobar">Wuilmer Andres Roman</option>
-  <option value="Laura Torres">Bicol Cardenaz</option>
-  <option value="Juan Martínez">Johel Garnica </option>
-  <option value="Ana Gómez">Jesus Ricardo </option>
-   <option value="Ana Gómez">Carlos Escobar </option>
+  <option value="Wuilmer Andres Roman">Wuilmer Andres Roman/option>
+  <option value="Maicol Esteban Cardenas">Maicol Esteban Cardenas</option>
+  <option value="Johel Fernando Garnica">Johel Fernando Garnica </option>
+  <option value="Jesus Ricardo">Jesus Ricardo </option>
+   <option value="Pasante 1 Infraestructura">Pasante 1 Infraestructura </option>
+   <option value="Pasante 2 Comunicaciones">Pasante 2 Comunicaciones </option>
 </select>
           </div>
           <div class="form-group">
@@ -1004,15 +1048,95 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="text" id="edit-placa" required>
           </div>
           <div class="form-group">
-            <label for="edit-marca">Marca/Modelo</label>
+            <label for="edit-marca">Marca</label>
             <select id="edit-marca" required></select>
+            </div>
+               <div class="form-group">
+            <label for="edit-modelo">Modelo</label>
+            <select id="edit-modelo" required></select>
+            </div>
 
-<script>
+            <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const modelos = [
+    "E14", "Thinkcentre M", "V50S", "M705", "R2", "BD506", "DEP-250", "v14", "Thinkpad",
+    "DEP-450", "G6010", "ProBook", "Latitude", "1kva", "2kva", "3kva",
+    "M428fdw", "M130fw", "M426fdw", "M428", "Otro..."
+  ];
+
+  const selectModelo = document.getElementById('edit-modelo');
+  if (!selectModelo) return;
+
+  selectModelo.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Seleccionar...';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  selectModelo.appendChild(placeholder);
+
+  modelos.forEach(modelo => {
+    const option = document.createElement('option');
+    option.value = modelo;
+    option.textContent = modelo;
+    selectModelo.appendChild(option);
+  });
+
+  new Choices(selectModelo, {
+    placeholderValue: 'Seleccionar...',
+    searchPlaceholderValue: 'Buscar o escribir...',
+    searchEnabled: true,
+    removeItemButton: true,
+    addItems: true,
+    duplicateItemsAllowed: false,
+    editItems: true,
+    addItemFilter: () => true,
+    addItemText: (value) => `Usar: "${value}"`,
+    noResultsText: 'No encontrado',
+    noChoicesText: 'Sin opciones',
+    shouldSort: false
+  });
+});
+</script>
+
+          <div class="form-group">
+            <label for="edit-serial">Número de Serie</label>
+            <input type="text" id="edit-serial" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-fecha">Fecha</label>
+            <input type="date" id="edit-fecha" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-tecnico">Técnico Responsable</label>
+            <select id="edit-tecnico" required></select>
+          </div>
+          <div class="form-group">
+            <label for="edit-tipo-mantenimiento">Tipo de Mantenimiento</label>
+            <select id="edit-tipo-mantenimiento" required>
+              <option value="Preventivo">Preventivo</option>
+              <option value="Correctivo">Correctivo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-estado">Estado</label>
+            <select id="edit-estado" required>
+              <option value="Pendiente">Pendiente</option>
+              <option value="En progreso">En progreso</option>
+              <option value="Finalizado">Finalizado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-ubicacion">Ubicación</label>
+           <select id="edit-ubicacion" required></select>
+
+           <script>
 document.addEventListener('DOMContentLoaded', () => {
   const marcas = [
-    "R2", "Motorola R2", "Lenovo v14", "Lenovo Thinkpad", "Motorola DEP450",
-    "Canon G6010", "HP ProBook", "Dell Latitude", "Otro...", "LENOVO"
+    "Hytera", "Motorola", "Lenovo","Dell","Lenovo Mesa","Epson",
+    "Canon", "HP", "Dell Latitude","Ups Powest","Ups Legrand","Ups Unipower","Otro..."
   ];
+
 
   const select = document.getElementById('edit-marca');
   if (!select) return;
@@ -1050,27 +1174,17 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
-          </div>
-          <div class="form-group">
-            <label for="edit-serial">Número de Serie</label>
-            <input type="text" id="edit-serial" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-fecha">Fecha</label>
-            <input type="date" id="edit-fecha" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-tecnico">Técnico Responsable</label>
-            <select id="edit-tecnico" required></select>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const tecnicos = [
-    "Carlos Escobar", "Wuilmer Andres Roman", "Bicol Cardenaz",
-    "Johel Garnica", "Jesus Ricardo"
+    "Wuilmer Andres Roman", "Maicol Esteban Cardenas",
+    "Johel Fernando Garnica", "Jesus Ricardo",
+    "Pasante 1 Infraestructura",
+    "Pasante 2 Comunicaciones"
   ];
 
-  const select = document.getElementById('tecnico');
+  const select = document.getElementById('edit-tecnico');
   if (!select) return;
 
   select.innerHTML = '';
@@ -1104,27 +1218,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
-
-          </div>
-          <div class="form-group">
-            <label for="edit-tipo-mantenimiento">Tipo de Mantenimiento</label>
-            <select id="edit-tipo-mantenimiento" required>
-              <option value="Preventivo">Preventivo</option>
-              <option value="Correctivo">Correctivo</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="edit-estado">Estado</label>
-            <select id="edit-estado" required>
-              <option value="Pendiente">Pendiente</option>
-              <option value="En progreso">En progreso</option>
-              <option value="Finalizado">Finalizado</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="edit-ubicacion">Ubicación</label>
-           <select id="edit-ubicacion" required></select>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -1176,7 +1269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="text" id="edit-centro-costo" required>
           </div>
           <div class="form-group">
-            <label for="edit-url-ticket">URL del Ticket (opcional)</label>
+            <label for="edit-url-ticket">URL del Ticket</label>
             <input type="url" id="edit-url-ticket">
           </div>
         </div>
@@ -1254,6 +1347,9 @@ document.addEventListener('DOMContentLoaded', () => {
     buscarRegistros();
   });
 
+  
+
+
   // Mostrar video al inicio
   videoFondo.style.display = 'block';
 
@@ -1275,6 +1371,10 @@ if (isLoggedIn === 'true') {
 
   // ✅ Sincronizar cada 30 segundos
   setInterval(sincronizarRegistros, 30000);
+});
+document.getElementById('filtrar-fechas').addEventListener('click', () => {
+  aplicarFiltroFecha = true;
+  buscarRegistros();
 });
 
     // Event Listeners
@@ -1340,6 +1440,7 @@ function agregarRegistro(e) {
     tipo: document.getElementById('tipo').value,
     placa: document.getElementById('placa').value,
     marca: document.getElementById('marca').value,
+    modelo: document.getElementById('modelo').value,
     serial: document.getElementById('serial').value,
     fecha: document.getElementById('fecha').value,
     tecnico: document.getElementById('tecnico').value,
@@ -1410,8 +1511,12 @@ function agregarRegistro(e) {
               <div class="detail-value">${registro.tipo}</div>
             </div>
             <div class="detail-item">
-              <div class="detail-label">Marca/Modelo</div>
+              <div class="detail-label">Marca</div>
               <div class="detail-value">${registro.marca}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Modelo</div>
+              <div class="detail-value">${registro.modelo}</div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Serial</div>
@@ -1441,11 +1546,11 @@ function agregarRegistro(e) {
               <div class="detail-label">Centro Costo</div>
               <div class="detail-value">${registro.centroCosto}</div>
             </div>
-            ${registro.urlTicket ? `
-            <div class="detail-item">
-              <div class="detail-label">Ticket</div>
-              <div class="detail-value"><a href="${registro.urlTicket}" target="_blank">Ver ticket</a></div>
-            </div>` : ''}
+           ${registro.urlTicket && registro.urlTicket.trim() !== '' ? `
+  <div class="detail-item">
+    <div class="detail-label">Ticket</div>
+    <div class="detail-value"><a href="${registro.urlTicket}" target="_blank">📎Ver ticket</a></div>
+  </div>` : ''}
             <div class="detail-item">
               <div class="detail-label">Registrado por</div>
               <div class="detail-value">${registro.usuarioRegistro || 'Sistema'}</div>
@@ -1469,7 +1574,7 @@ function agregarRegistro(e) {
         });
       });
 
-    document.querySelectorAll('.delete-btn').forEach(btn => {
+   document.querySelectorAll('.delete-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
     const id = e.target.getAttribute('data-id');
     eliminarRegistro(id);
@@ -1479,34 +1584,132 @@ function agregarRegistro(e) {
     }
 
     function buscarRegistros() {
+     if (modoPendientes) {
+  modoPendientes = false;
+}
+
       const termino = buscarInput.value.toLowerCase();
       const desde = document.getElementById('filtro-desde').value;
       const hasta = document.getElementById('filtro-hasta').value;
-      
+      function exportarAExcel() {
+  const resultados = document.querySelectorAll('#resultados .registro-item');
+  if (resultados.length === 0) {
+    alert('No hay resultados de búsqueda para exportar.');
+    return;
+  }
+
+  const datosExportar = [];
+
+  resultados.forEach(item => {
+    const fila = {
+      'Tipo de Equipo': '',
+      'Placa': '',
+      'Marca': '',
+      'Modelo': '',
+      'Serial': '',
+      'Fecha': '',
+      'Técnico': '',
+      'Estado': '',
+      'Ubicación': '',
+      'Centro de Costo': '',
+      'Observaciones': '',
+      'Ticket': '',
+      'Registrado por': ''
+    };
+
+    const detalles = item.querySelectorAll('.detail-item');
+    detalles.forEach(detalle => {
+      const label = detalle.querySelector('.detail-label')?.textContent.trim().toLowerCase();
+      const valor = detalle.querySelector('.detail-value')?.textContent.trim();
+
+      if (!label) return;
+
+      if (label.includes('tipo de equipo')) fila['Tipo de Equipo'] = valor;
+      else if (label.includes('placa')) fila['Placa'] = valor;
+      else if (label.includes('marca')) fila['Marca'] = valor;
+      else if (label.includes('modelo')) fila['Modelo'] = valor;
+      else if (label.includes('serial')) fila['Serial'] = valor;
+      else if (label.includes('fecha')) fila['Fecha'] = valor;
+      else if (label.includes('técnico')) fila['Técnico'] = valor;
+      else if (label.includes('ubicación')) fila['Ubicación'] = valor;
+      else if (label.includes('centro')) fila['Centro de Costo'] = valor;
+      else if (label.includes('observaciones')) fila['Observaciones'] = valor;
+      else if (label.includes('ticket')) fila['Ticket'] = valor;
+      else if (label.includes('registrado')) fila['Registrado por'] = valor;
+    });
+
+    // Obtener estado directamente desde la clase
+    fila['Estado'] = item.querySelector('.status-badge')?.textContent.trim() || '';
+
+    datosExportar.push(fila);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(datosExportar);
+  XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
+
+  const fechaActual = new Date().toISOString().split('T')[0];
+  XLSX.writeFile(wb, `resultados_busqueda_${fechaActual}.xlsx`);
+}
+
       resultadosBusqueda.innerHTML = '';
-      
       let resultados = registros.filter(registro => {
-        const coincideTexto = 
-          registro.placa.toLowerCase().includes(termino) || 
-          registro.serial.toLowerCase().includes(termino) || 
-          registro.tecnico.toLowerCase().includes(termino) ||
-          (registro.usuarioRegistro && registro.usuarioRegistro.toLowerCase().includes(termino));
-        
-        const fechaRegistro = new Date(registro.fecha);
-        const fechaDesde = new Date(desde);
-        const fechaHasta = new Date(hasta);
-        
-        fechaHasta.setDate(fechaHasta.getDate() + 1); // Incluir el día completo
-        
-        const coincideFecha = fechaRegistro >= fechaDesde && fechaRegistro <= fechaHasta;
-        
-        return coincideTexto && coincideFecha;
-      });
+  const coincideTexto = 
+    registro.placa.toLowerCase().includes(termino) || 
+    registro.serial.toLowerCase().includes(termino) || 
+    registro.tecnico.toLowerCase().includes(termino) ||
+    (registro.usuarioRegistro && registro.usuarioRegistro.toLowerCase().includes(termino));
+
+  if (!aplicarFiltroFecha || (!desde && !hasta)) {
+    return coincideTexto;
+  }
+
+  const fechaRegistro = new Date(registro.fecha);
+  const fechaDesde = new Date(desde);
+  const fechaHasta = new Date(hasta);
+  fechaHasta.setDate(fechaHasta.getDate() + 1); // incluir todo el día
+
+  const coincideFecha = fechaRegistro >= fechaDesde && fechaRegistro <= fechaHasta;
+  return coincideTexto && coincideFecha;
+});
+aplicarFiltroFecha = false;
+
       
       if (resultados.length === 0) {
         resultadosBusqueda.innerHTML = '<p style="text-align: center; color: #666;">No se encontraron resultados</p>';
         return;
       }
+      function filtrarPorFechas() {
+  const desde = document.getElementById('filtro-desde').value;
+  const hasta = document.getElementById('filtro-hasta').value;
+
+  if (!desde || !hasta) {
+    alert("⚠️ Por favor selecciona un rango de fechas válido.");
+    return;
+  }
+
+  const termino = buscarInput.value.toLowerCase();
+
+  const fechaDesde = new Date(desde);
+  const fechaHasta = new Date(hasta);
+  fechaHasta.setDate(fechaHasta.getDate() + 1); // incluir todo el día
+
+  const resultados = registros.filter(registro => {
+    const coincideTexto =
+      registro.placa.toLowerCase().includes(termino) ||
+      registro.serial.toLowerCase().includes(termino) ||
+      registro.tecnico.toLowerCase().includes(termino) ||
+      (registro.usuarioRegistro && registro.usuarioRegistro.toLowerCase().includes(termino));
+
+    const fechaRegistro = new Date(registro.fecha);
+    const coincideFecha = fechaRegistro >= fechaDesde && fechaRegistro <= fechaHasta;
+
+    return coincideTexto && coincideFecha;
+  });
+
+  renderizarResultadosBusqueda(resultados);
+}
+
       
       resultados.forEach(registro => {
         const li = document.createElement('li');
@@ -1533,8 +1736,12 @@ function agregarRegistro(e) {
               <div class="detail-value">${registro.tipo}</div>
             </div>
             <div class="detail-item">
-              <div class="detail-label">Marca/Modelo</div>
+              <div class="detail-label">Marca</div>
               <div class="detail-value">${registro.marca}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Modelo</div>
+              <div class="detail-value">${registro.modelo}</div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Placa/Identificacion</div>
@@ -1564,6 +1771,10 @@ function agregarRegistro(e) {
           <div class="detail-label">Observaciones</div>
           <div class="detail-value">${registro.observaciones || ''}</div>
         </div>
+        ${registro.urlTicket ? `<div class="detail-item">
+  <div class="detail-label">Ticket</div>
+  <div class="detail-value"><a href="${registro.urlTicket}" target="_blank">📎Ver ticket</a></div>
+</div>` : ''}
             <div class="detail-item">
               <div class="detail-label">Registrado por</div>
               <div class="detail-value">${registro.usuarioRegistro || 'Sistema'}</div>
@@ -1586,29 +1797,40 @@ function agregarRegistro(e) {
           editarRegistro(id);
         });
       });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    eliminarRegistro(id);
+  });
+});
 
     }
 
     function editarRegistro(id) {
-      const registro = registros.find(r => r.id === id);
-      if (!registro) return;
-      
-      document.getElementById('edit-tipo').value = registro.tipo;
-      document.getElementById('edit-placa').value = registro.placa;
-      document.getElementById('edit-marca').value = registro.marca;
-      document.getElementById('edit-serial').value = registro.serial;
-      document.getElementById('edit-fecha').value = registro.fecha;
-      document.getElementById('edit-tecnico').value = registro.tecnico;
-      document.getElementById('edit-tipo-mantenimiento').value = registro.tipoMantenimiento;
-      document.getElementById('edit-estado').value = registro.estado;
-      document.getElementById('edit-ubicacion').value = registro.ubicacion;
-      document.getElementById('edit-centro-costo').value = registro.centroCosto;
-      document.getElementById('edit-url-ticket').value = registro.urlTicket || '';
-      document.getElementById('edit-observaciones').value = registro.observaciones || '';
-      document.getElementById('edit-indice').value = registros.findIndex(r => r.id === id);
-      
-      modalEdicion.classList.add('active');
-    }
+  const registro = registros.find(r => r.id === id);
+  if (!registro) return;
+
+  // Campos normales
+  document.getElementById('edit-placa').value = registro.placa;
+  document.getElementById('edit-serial').value = registro.serial;
+  document.getElementById('edit-fecha').value = registro.fecha;
+  document.getElementById('edit-tipo-mantenimiento').value = registro.tipoMantenimiento;
+  document.getElementById('edit-estado').value = registro.estado;
+  document.getElementById('edit-centro-costo').value = registro.centroCosto;
+  document.getElementById('edit-url-ticket').value = registro.urlTicket || '';
+  document.getElementById('edit-observaciones').value = registro.observaciones || '';
+  document.getElementById('edit-indice').value = registros.findIndex(r => r.id === id);
+
+  // Campos <select> con Choices.js
+  setChoiceValue('edit-tipo', registro.tipo);
+  setChoiceValue('edit-marca', registro.marca);
+  setChoiceValue('edit-modelo', registro.modelo);
+  setChoiceValue('edit-tecnico', registro.tecnico);
+  setChoiceValue('edit-ubicacion', registro.ubicacion);
+
+  modalEdicion.classList.add('active');
+}
+
 
     function guardarEdicion(e) {
   e.preventDefault();
@@ -1621,6 +1843,7 @@ function agregarRegistro(e) {
     tipo: document.getElementById('edit-tipo').value,
     placa: document.getElementById('edit-placa').value,
     marca: document.getElementById('edit-marca').value,
+    modelo: document.getElementById('edit-modelo').value,
     serial: document.getElementById('edit-serial').value,
     fecha: document.getElementById('edit-fecha').value,
     tecnico: document.getElementById('edit-tecnico').value,
@@ -1653,6 +1876,20 @@ function agregarRegistro(e) {
   });
 
 }
+function setChoiceValue(selectId, value) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+
+  const choiceInstance = select.choicesInstance || select._choices || (Choices.instances || []).find(c => c.passedElement.element.id === selectId);
+
+  if (choiceInstance) {
+    choiceInstance.removeActiveItems();       // limpia selección anterior
+    choiceInstance.setChoiceByValue(value);   // selecciona nuevo valor
+  } else {
+    select.value = value; // fallback si no es Choices
+  }
+}
+
 
 function eliminarRegistro(id) {
   if (!confirm('¿Estás seguro de eliminar este registro?')) return;
@@ -1695,8 +1932,7 @@ function eliminarRegistro(id) {
       return new Date(dateString).toLocaleDateString('es-ES', options);
     }
 
-    
-function exportarAExcel() {
+    function exportarAExcel() {
   const resultados = document.querySelectorAll('#resultados .registro-item');
   if (resultados.length === 0) {
     alert('No hay resultados de búsqueda para exportar.');
@@ -1706,39 +1942,55 @@ function exportarAExcel() {
   const datosExportar = [];
 
   resultados.forEach(item => {
-    const tipoPlaca = item.querySelector('.registro-title').textContent.split(' - ');
-    const tipo = tipoPlaca[0] || '';
-    const placa = tipoPlaca[1] || '';
+    const fila = {
+      'Tipo de Equipo': '',
+      'Placa': '',
+      'Marca': '',
+      'Modelo': '',
+      'Serial': '',
+      'Fecha': '',
+      'Técnico': '',
+      'Tipo de Mantenimiento': '',
+      'Estado': '',
+      'Ubicación': '',
+      'Centro de Costo': '',
+      'Observaciones': '',
+      'Ticket': '',
+      'Registrado por': ''
+    };
 
-    const detalles = item.querySelectorAll('.detail-value');
-    const marca = detalles[0]?.textContent || '';
-    const serial = detalles[1]?.textContent || '';
-    const fecha = detalles[2]?.textContent || '';
-    const tecnico = detalles[3]?.textContent || '';
-    const registradoPor = detalles[4]?.textContent || '';
-    const ubicacion = detalles[0]?.textContent || '';
-    const centroCosto = detalles[6]?.textContent || '';
-    const observaciones = detalles[7]?.textContent || '';
-    const estado = item.querySelector('.status-badge')?.textContent || '';
+    const detalles = item.querySelectorAll('.detail-item');
+    detalles.forEach(detalle => {
+      const label = detalle.querySelector('.detail-label')?.textContent.trim().toLowerCase();
+      const valor = detalle.querySelector('.detail-value')?.textContent.trim();
 
-    datosExportar.push({
-      'Tipo de Equipo': tipo,
-      'Placa': placa,
-      'Marca/Modelo': marca,
-      'Serial': serial,
-      'Fecha': fecha,
-      'Técnico': tecnico,
-      'Estado': estado,
-      'Ubicación': ubicacion,
-      'Centro de Costo': centroCosto,
-      'Observaciones': observaciones,
-      'Registrado por': registradoPor
+      if (!label) return;
+
+      if (label.includes('tipo de equipo')) fila['Tipo de Equipo'] = valor;
+      else if (label.includes('placa')) fila['Placa'] = valor;
+      else if (label.includes('marca') && !label.includes('marca/modelo')) fila['Marca'] = valor;
+      else if (label.includes('modelo')) fila['Modelo'] = valor;
+      else if (label.includes('serial')) fila['Serial'] = valor;
+      else if (label.includes('fecha')) fila['Fecha'] = valor;
+      else if (label.includes('técnico')) fila['Técnico'] = valor;
+      else if (label.includes('tipo mant')) fila['Tipo de Mantenimiento'] = valor;
+      else if (label.includes('ubicación')) fila['Ubicación'] = valor;
+      else if (label.includes('centro')) fila['Centro de Costo'] = valor;
+      else if (label.includes('observaciones')) fila['Observaciones'] = valor;
+      else if (label.includes('ticket')) {
+        const link = detalle.querySelector('a');
+        fila['Ticket'] = link ? link.href : valor;
+      }
+      else if (label.includes('registrado')) fila['Registrado por'] = valor;
     });
+
+    fila['Estado'] = item.querySelector('.status-badge')?.textContent.trim() || '';
+    datosExportar.push(fila);
   });
 
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(datosExportar);
-  XLSX.utils.book_append_sheet(wb, ws, 'ResultadosBusqueda');
+  XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
 
   const fechaActual = new Date().toISOString().split('T')[0];
   XLSX.writeFile(wb, `resultados_busqueda_${fechaActual}.xlsx`);
@@ -1792,9 +2044,13 @@ function exportarAExcel() {
             <div class="detail-value">${item.tipo}</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">Marca/Modelo</div>
+            <div class="detail-label">Marca</div>
             <div class="detail-value">${item.marca}</div>
           </div>
+          <div class="detail-item">
+              <div class="detail-label">Modelo</div>
+              <div class="detail-value">${registro.modelo}</div>
+            </div>
           <div class="detail-item">
             <div class="detail-label">Placa/Identificación</div>
             <div class="detail-value">${item.placa}</div>
@@ -1854,6 +2110,302 @@ window.addEventListener('click', (e) => {
     document.getElementById('modal-historial').classList.remove('active');
   }
 });
+let modoPendientes = false; // nuevo estado global
+let aplicarFiltroFecha = false;
+
+function verPendientes() {
+  modoPendientes = true;
+  cambiarSeccion('buscar');
+  document.getElementById('buscar-input').value = '';
+document.getElementById('filtro-desde').value = '';
+document.getElementById('filtro-hasta').value = '';
+
+  resultadosBusqueda.innerHTML = '';
+
+  const resultados = registros.filter(r => r.estado === 'Pendiente');
+
+  if (resultados.length === 0) {
+    resultadosBusqueda.innerHTML = '<p class="mensaje-vacio">⚠️ No hay registros pendientes</p>';
+    return;
+  }
+
+  resultados.forEach(registro => {
+  const li = document.createElement('li');
+  li.className = 'registro-item';
+
+  let statusClass = '';
+  if (registro.estado === 'Pendiente') statusClass = 'status-pendiente';
+  if (registro.estado === 'En progreso') statusClass = 'status-progreso';
+  if (registro.estado === 'Finalizado') statusClass = 'status-finalizado';
+
+li.innerHTML = `
+  <div class="registro-header">
+    <div class="registro-title">${registro.tipo} - ${registro.placa}</div>
+    <div class="registro-actions">
+      <span class="status-badge ${statusClass}">${registro.estado}</span>
+      <button class="edit-btn" data-id="${registro.id}">Editar</button>
+      <button class="delete-btn" data-id="${registro.id}">Eliminar</button>
+      <button class="history-btn" data-id="${registro.id}">Ver Historial</button>
+    </div>
+  </div>
+  <div class="registro-details">
+    <div class="detail-item"><div class="detail-label">Tipo de Equipo</div><div class="detail-value">${registro.tipo}</div></div>
+    <div class="detail-item"><div class="detail-label">Marca</div><div class="detail-value">${registro.marca}</div></div>
+    <div class="detail-item"><div class="detail-label">Modelo</div><div class="detail-value">${registro.modelo}</div></div>
+    <div class="detail-item"><div class="detail-label">Placa/Identificacion</div><div class="detail-value">${registro.placa}</div></div>
+    <div class="detail-item"><div class="detail-label">Serial</div><div class="detail-value">${registro.serial}</div></div>
+    <div class="detail-item"><div class="detail-label">Fecha</div><div class="detail-value">${formatDate(registro.fecha)}</div></div>
+    <div class="detail-item"><div class="detail-label">Técnico</div><div class="detail-value">${registro.tecnico}</div></div>
+    <div class="detail-item"><div class="detail-label">Tipo de Mantenimiento</div><div class="detail-value">${registro.tipoMantenimiento}</div></div>
+    <div class="detail-item"><div class="detail-label">Ubicación</div><div class="detail-value">${registro.ubicacion}</div></div>
+    <div class="detail-item"><div class="detail-label">Centro de Costo</div><div class="detail-value">${registro.centroCosto}</div></div>
+    ${registro.observaciones ? `<div class="detail-item"><div class="detail-label">Observaciones</div><div class="detail-value">${registro.observaciones}</div></div>` : ''}
+    ${registro.urlTicket ? `<div class="detail-item"><div class="detail-label">Ticket</div><div class="detail-value"><a href="${registro.urlTicket}" target="_blank">📎Ver ticket</a></div></div>` : ''}
+    <div class="detail-item"><div class="detail-label">Registrado por</div><div class="detail-value">${registro.usuarioRegistro || 'Sistema'}</div></div>
+  </div>
+`;
+
+
+  resultadosBusqueda.appendChild(li);
+  // ... (después de resultados.forEach)
+document.querySelectorAll('.edit-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    editarRegistro(id);
+  });
+});
+
+document.querySelectorAll('.delete-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    eliminarRegistro(id);
+  });
+});
+
+document.querySelectorAll('.history-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    verHistorial(id);
+  });
+});
+
+});
+}
+function verEnProgreso() {
+  modoPendientes = true;
+  cambiarSeccion('buscar');
+  document.getElementById('buscar-input').value = '';
+  document.getElementById('filtro-desde').value = '';
+  document.getElementById('filtro-hasta').value = '';
+
+  resultadosBusqueda.innerHTML = '';
+
+  const resultados = registros.filter(r => r.estado === 'En progreso');
+
+  if (resultados.length === 0) {
+    resultadosBusqueda.innerHTML = '<p class="mensaje-vacio">⚠️ No hay registros en Progreosos/p>';
+    return;
+  }
+
+  resultados.forEach(registro => {
+    const li = document.createElement('li');
+    li.className = 'registro-item';
+
+    let statusClass = 'status-progreso';
+
+    li.innerHTML = `
+      <div class="registro-header">
+        <div class="registro-title">${registro.tipo} - ${registro.placa}</div>
+        <div class="registro-actions">
+          <span class="status-badge ${statusClass}">${registro.estado}</span>
+          <button class="edit-btn" data-id="${registro.id}">Editar</button>
+          <button class="delete-btn" data-id="${registro.id}">Eliminar</button>
+          <button class="history-btn" data-id="${registro.id}">Ver Historial</button>
+        </div>
+      </div>
+      <div class="registro-details">
+        <div class="detail-item"><div class="detail-label">Tipo de Equipo</div><div class="detail-value">${registro.tipo}</div></div>
+        <div class="detail-item"><div class="detail-label">Marca</div><div class="detail-value">${registro.marca}</div></div>
+         <div class="detail-item"><div class="detail-label">Modelo</div><div class="detail-value">${registro.modelo}</div></div>
+        <div class="detail-item"><div class="detail-label">Placa/Identificacion</div><div class="detail-value">${registro.placa}</div></div>
+        <div class="detail-item"><div class="detail-label">Serial</div><div class="detail-value">${registro.serial}</div></div>
+        <div class="detail-item"><div class="detail-label">Fecha</div><div class="detail-value">${formatDate(registro.fecha)}</div></div>
+        <div class="detail-item"><div class="detail-label">Técnico</div><div class="detail-value">${registro.tecnico}</div></div>
+        <div class="detail-item"><div class="detail-label">Tipo de Mantenimiento</div><div class="detail-value">${registro.tipoMantenimiento}</div></div>
+        <div class="detail-item"><div class="detail-label">Ubicación</div><div class="detail-value">${registro.ubicacion}</div></div>
+        <div class="detail-item"><div class="detail-label">Centro de Costo</div><div class="detail-value">${registro.centroCosto}</div></div>
+        ${registro.observaciones ? `<div class="detail-item"><div class="detail-label">Observaciones</div><div class="detail-value">${registro.observaciones}</div></div>` : ''}
+        ${registro.urlTicket ? `<div class="detail-item"><div class="detail-label">Ticket</div><div class="detail-value"><a href="${registro.urlTicket}" target="_blank">📎Ver ticket</a></div></div>` : ''}
+        <div class="detail-item"><div class="detail-label">Registrado por</div><div class="detail-value">${registro.usuarioRegistro || 'Sistema'}</div></div>
+      </div>
+    `;
+    resultadosBusqueda.appendChild(li);
+    // ... (después de resultados.forEach)
+document.querySelectorAll('.edit-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    editarRegistro(id);
+  });
+});
+
+document.querySelectorAll('.delete-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    eliminarRegistro(id);
+  });
+});
+
+document.querySelectorAll('.history-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    verHistorial(id);
+  });
+});
+
+  });
+}
+
+function verFinalizados() {
+  modoPendientes = true;
+  cambiarSeccion('buscar');
+  document.getElementById('buscar-input').value = '';
+  document.getElementById('filtro-desde').value = '';
+  document.getElementById('filtro-hasta').value = '';
+
+  resultadosBusqueda.innerHTML = '';
+
+  const resultados = registros.filter(r => r.estado === 'Finalizado');
+
+  if (resultados.length === 0) {
+    resultadosBusqueda.innerHTML = '<p class="mensaje-vacio">⚠️ No hay registros Finalizados</p>';
+
+    return;
+  }
+
+  resultados.forEach(registro => {
+    const li = document.createElement('li');
+    li.className = 'registro-item';
+
+    let statusClass = 'status-finalizado';
+
+    li.innerHTML = `
+      <div class="registro-header">
+        <div class="registro-title">${registro.tipo} - ${registro.placa}</div>
+        <div class="registro-actions">
+          <span class="status-badge ${statusClass}">${registro.estado}</span>
+          <button class="edit-btn" data-id="${registro.id}">Editar</button>
+          <button class="delete-btn" data-id="${registro.id}">Eliminar</button>
+          <button class="history-btn" data-id="${registro.id}">Ver Historial</button>
+        </div>
+      </div>
+      <div class="registro-details">
+        <div class="detail-item"><div class="detail-label">Tipo de Equipo</div><div class="detail-value">${registro.tipo}</div></div>
+        <div class="detail-item"><div class="detail-label">Marca</div><div class="detail-value">${registro.marca}</div></div>
+        <div class="detail-item"><div class="detail-label">Modelo</div><div class="detail-value">${registro.modelo}</div></div>
+        <div class="detail-item"><div class="detail-label">Placa/Identificacion</div><div class="detail-value">${registro.placa}</div></div>
+        <div class="detail-item"><div class="detail-label">Serial</div><div class="detail-value">${registro.serial}</div></div>
+        <div class="detail-item"><div class="detail-label">Fecha</div><div class="detail-value">${formatDate(registro.fecha)}</div></div>
+        <div class="detail-item"><div class="detail-label">Técnico</div><div class="detail-value">${registro.tecnico}</div></div>
+        <div class="detail-item"><div class="detail-label">Tipo de Mantenimiento</div><div class="detail-value">${registro.tipoMantenimiento}</div></div>
+        <div class="detail-item"><div class="detail-label">Ubicación</div><div class="detail-value">${registro.ubicacion}</div></div>
+        <div class="detail-item"><div class="detail-label">Centro de Costo</div><div class="detail-value">${registro.centroCosto}</div></div>
+        ${registro.observaciones ? `<div class="detail-item"><div class="detail-label">Observaciones</div><div class="detail-value">${registro.observaciones}</div></div>` : ''}
+        ${registro.urlTicket ? `<div class="detail-item"><div class="detail-label">Ticket</div><div class="detail-value"><a href="${registro.urlTicket}" target="_blank">📎Ver ticket</a></div></div>` : ''}
+        <div class="detail-item"><div class="detail-label">Registrado por</div><div class="detail-value">${registro.usuarioRegistro || 'Sistema'}</div></div>
+      </div>
+    `;
+    resultadosBusqueda.appendChild(li);
+    // ... (después de resultados.forEach)
+document.querySelectorAll('.edit-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    editarRegistro(id);
+  });
+});
+
+document.querySelectorAll('.delete-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    eliminarRegistro(id);
+  });
+});
+
+document.querySelectorAll('.history-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const id = e.target.getAttribute('data-id');
+    verHistorial(id);
+  });
+});
+
+  });
+}
+function verTodosLosRegistros() {
+  modoPendientes = false;
+  cambiarSeccion('buscar');
+
+  // Limpiar filtros
+  document.getElementById('buscar-input').value = '';
+  document.getElementById('filtro-desde').value = '';
+  document.getElementById('filtro-hasta').value = '';
+  resultadosBusqueda.innerHTML = '';
+
+  if (registros.length === 0) {
+    resultadosBusqueda.innerHTML = '<p class="mensaje-vacio">⚠️ No hay registros disponibles</p>';
+    return;
+  }
+
+  registros.forEach(registro => {
+    const li = document.createElement('li');
+    li.className = 'registro-item';
+
+    let statusClass = '';
+    if (registro.estado === 'Pendiente') statusClass = 'status-pendiente';
+    if (registro.estado === 'En progreso') statusClass = 'status-progreso';
+    if (registro.estado === 'Finalizado') statusClass = 'status-finalizado';
+
+    li.innerHTML = `
+      <div class="registro-header">
+        <div class="registro-title">${registro.tipo} - ${registro.placa}</div>
+        <div class="registro-actions">
+          <span class="status-badge ${statusClass}">${registro.estado}</span>
+          <button class="edit-btn" data-id="${registro.id}">Editar</button>
+          <button class="delete-btn" data-id="${registro.id}">Eliminar</button>
+          <button class="history-btn" data-id="${registro.id}">Ver Historial</button>
+        </div>
+      </div>
+      <div class="registro-details">
+        <div class="detail-item"><div class="detail-label">Tipo de Equipo</div><div class="detail-value">${registro.tipo}</div></div>
+        <div class="detail-item"><div class="detail-label">Marca</div><div class="detail-value">${registro.marca}</div></div>
+        <div class="detail-item"><div class="detail-label">Modelo</div><div class="detail-value">${registro.modelo}</div></div>
+        <div class="detail-item"><div class="detail-label">Placa/Identificacion</div><div class="detail-value">${registro.placa}</div></div>
+        <div class="detail-item"><div class="detail-label">Serial</div><div class="detail-value">${registro.serial}</div></div>
+        <div class="detail-item"><div class="detail-label">Fecha</div><div class="detail-value">${formatDate(registro.fecha)}</div></div>
+        <div class="detail-item"><div class="detail-label">Técnico</div><div class="detail-value">${registro.tecnico}</div></div>
+        <div class="detail-item"><div class="detail-label">Tipo de Mantenimiento</div><div class="detail-value">${registro.tipoMantenimiento}</div></div>
+        <div class="detail-item"><div class="detail-label">Ubicación</div><div class="detail-value">${registro.ubicacion}</div></div>
+        <div class="detail-item"><div class="detail-label">Centro de Costo</div><div class="detail-value">${registro.centroCosto}</div></div>
+        ${registro.observaciones ? `<div class="detail-item"><div class="detail-label">Observaciones</div><div class="detail-value">${registro.observaciones}</div></div>` : ''}
+        ${registro.urlTicket ? `<div class="detail-item"><div class="detail-label">Ticket</div><div class="detail-value"><a href="${registro.urlTicket}" target="_blank">🔗 Ver ticket</a></div></div>` : ''}
+        <div class="detail-item"><div class="detail-label">Registrado por</div><div class="detail-value">${registro.usuarioRegistro || 'Sistema'}</div></div>
+      </div>
+    `;
+
+    resultadosBusqueda.appendChild(li);
+  });
+
+  // Reasignar listeners
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => editarRegistro(e.target.dataset.id));
+  });
+
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => eliminarRegistro(e.target.dataset.id));
+  });
+
+  document.querySelectorAll('.history-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => verHistorial(e.target.dataset.id));
+  });
+}
 
   </script>
 <!-- Modal de Historial -->

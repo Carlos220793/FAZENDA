@@ -21,17 +21,26 @@ $resultado = $conexion->query($sql);
 $registros = [];
 
 if ($resultado->num_rows > 0) {
-    while ($fila = $resultado->fetch_assoc()) {
-        // Renombrar claves para que coincidan con el frontend
-        $fila['tipoMantenimiento'] = $fila['tipo_mantenimiento'];
-        $fila['centroCosto'] = $fila['centro_costo'];
-        $fila['usuarioRegistro'] = $fila['usuario_registro'];
+   while ($fila = $resultado->fetch_assoc()) {
+    // Renombrar claves para que coincidan con el frontend
+    $fila['tipoMantenimiento'] = $fila['tipo_mantenimiento'];
+    $fila['centroCosto'] = $fila['centro_costo'];
+    $fila['usuarioRegistro'] = $fila['usuario_registro'];
+   $fila['urlTicket'] = $fila['url_ticket'] ?? '';
 
-        // Opcional: eliminar las claves originales con guion bajo
-        unset($fila['tipo_mantenimiento'], $fila['centro_costo'], $fila['usuario_registro']);
 
-        $registros[] = $fila;
-    }
+
+    // Eliminar claves originales con guion bajo
+    unset(
+        $fila['tipo_mantenimiento'],
+        $fila['centro_costo'],
+        $fila['usuario_registro'],
+        $fila['url_ticket']
+    );
+
+    $registros[] = $fila;
+}
+
 }
 
 echo json_encode($registros);

@@ -26,6 +26,7 @@ if (!$data) {
 $tipo = $data["tipo"];
 $placa = $data["placa"];
 $marca = $data["marca"];
+$modelo = $data["modelo"];
 $serial = $data["serial"];
 $fecha = $data["fecha"];
 $tecnico = $data["tecnico"];
@@ -38,13 +39,15 @@ $observaciones = $data["observaciones"];
 $fecha_registro = $data["fechaRegistro"];
 $usuario_registro = $data["usuarioRegistro"];
 
+// Preparar sentencia con 15 columnas
 $stmt = $conexion->prepare("INSERT INTO registros 
-(tipo, placa, marca, serial, fecha, tecnico, tipo_mantenimiento, estado, ubicacion, centro_costo, url_ticket, observaciones, fecha_registro, usuario_registro) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+(tipo, placa, marca, modelo, serial, fecha, tecnico, tipo_mantenimiento, estado, ubicacion, centro_costo, url_ticket, observaciones, fecha_registro, usuario_registro)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
+// ← 15 letras 's' para 15 valores
 $stmt->bind_param(
-    "ssssssssssssss",
-    $tipo, $placa, $marca, $serial, $fecha, $tecnico,
+    "sssssssssssssss",
+    $tipo, $placa, $marca, $modelo, $serial, $fecha, $tecnico,
     $tipo_mantenimiento, $estado, $ubicacion, $centro_costo,
     $url_ticket, $observaciones, $fecha_registro, $usuario_registro
 );
@@ -53,15 +56,16 @@ ob_clean(); // Limpia cualquier salida previa
 if ($stmt->execute()) {
     echo json_encode([
         'success' => true,
-        'mensaje' => 'Registro guardado exitosamente',
+        'mensaje' => '✅Registro guardado exitosamente',
         'id' => $stmt->insert_id
     ]);
 } else {
     echo json_encode([
         'success' => false,
-        'error' => 'Error al guardar: ' . $stmt->error
+        'error' => '❌ Error al guardar: ' . $stmt->error
     ]);
 }
 
 $stmt->close();
 $conexion->close();
+?>
