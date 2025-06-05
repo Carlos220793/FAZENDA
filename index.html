@@ -712,16 +712,25 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const tiposEquipo = [
-    "Computador portátil",
-    "Computador de escritorio",
-    "Impresora",
+     "Computador portátil",
+      "Computador de escritorio",
+       "Impresora",
     "Teléfono IP",
-    "Tablet",
-    "Radio de comunicación",
-    "Router / Switch",
+     "Tablet",
+      "Radio de comunicación",
+       "Router / Switch",
     "Cámara de seguridad",
-    "Proyector",
-    "Otro..."
+     "Proyector",
+     "Ups",
+     "AP",
+     "Terminal",
+     "Terminal Facial",
+    "Nvr",
+    "Servidores",
+    "Rack de comunicaciones",
+    "Radio",
+    "VideoCoferencia",
+     "Otro..."
   ];
 
   const selectTipo = document.getElementById('tipo');
@@ -769,7 +778,9 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const marcas = [
      "Hytera", "Motorola", "Lenovo","Dell","Lenovo Mesa","Epson",
-    "Canon", "HP", "Dell Latitude","Ups Powest","Ups Legrand","Ups Unipower","Otro..."
+    "Canon", "HP", "Dell Latitude","Powest","Legrand","Unipower","Powest Titan",
+    "Apc","Access Poin","Zebra","Hikvision","hikvision","Ryotel", "Hp Laser","ThinkPad",
+    "TP-LINK","MINUTEMAN ","NUROUM","Otro..."
   ];
 
   const selectMarca = document.getElementById('marca');
@@ -814,9 +825,10 @@ document.addEventListener('DOMContentLoaded', () => {
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const modelos = [
-      "E14", "Thinkcentre M", "V50S", "M705", "R2", "BD506", "DEP-250", "v14", "Thinkpad",
+      "E14", "Thinkcentre M", "V50S", "M705", "R2", "BD506", "DEP-250", "v14","L390", 
       "DEP-450", "G6010", "ProBook", "Latitude", "1kva", "2kva", "3kva",
-      "M428fdw", "M130fw", "M426fdw", "M428", "Otro..."
+      "M428fdw", "M130fw", "M426fdw", "M428","402","BD507","V330-20ICB AIO","3200","Aruba","43809",
+      "TL-SG1008D", "Otro..."
     ];
 
     const selectModelo = document.getElementById('modelo');
@@ -903,9 +915,11 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const ubicaciones = [
-    "Admin Fincas", "Gestión Humana", "Tecnología", "Mantenimiento", "Agricultura", "Taller",
+   "Admin Fincas", "Gestión Humana", "Tecnología", "Mantenimiento", "Agricultura FZ", "Taller",
     "Logística", "Porcicultura", "Bioprocesos", "Proyectos", "Planta Extractora",
-    "Planta Balanceados FZ", "Planta Balanceados BARL", "Planta Secamiento FZ", "Planta Secamiento BARL"
+    "Planta Balanceados FZ", "Planta Balanceados BARL", "Planta Secamiento FZ",
+     "Planta Secamiento BARL","Taller SF","Agricultura SF","Agricultura SC",
+     "Ganderia","Calidad","Obra Civil","Salud Integral","Control Interno","Fundacion Pervivir","PLanta Semilla","Otro.."
   ];
 
   const select = document.getElementById('ubicacion');
@@ -1004,7 +1018,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const tiposEquipo = [
     "Computador portátil", "Computador de escritorio", "Impresora",
     "Teléfono IP", "Tablet", "Radio de comunicación", "Router / Switch",
-    "Cámara de seguridad", "Proyector", "Otro..."
+    "Cámara de seguridad", "Proyector","Ups","AP","Terminal","Terminal Facial",
+    "Nvr","Servidores","Rack de comunicaciones","Radio","VideoCoferencia", "Otro..."
   ];
 
   const select = document.getElementById('edit-tipo');
@@ -1059,9 +1074,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <script>
 document.addEventListener('DOMContentLoaded', () => {
   const modelos = [
-    "E14", "Thinkcentre M", "V50S", "M705", "R2", "BD506", "DEP-250", "v14", "Thinkpad",
+    "E14", "Thinkcentre M", "V50S", "M705", "R2", "BD506", "DEP-250", "v14", "L390",
     "DEP-450", "G6010", "ProBook", "Latitude", "1kva", "2kva", "3kva",
-    "M428fdw", "M130fw", "M426fdw", "M428", "Otro..."
+    "M428fdw", "M130fw", "M426fdw", "M428","402","BD507","V330-20ICB AIO","3200","Aruba","43809",
+    "TL-SG1008D", "Otro..."
   ];
 
   const selectModelo = document.getElementById('edit-modelo');
@@ -1134,7 +1150,9 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const marcas = [
     "Hytera", "Motorola", "Lenovo","Dell","Lenovo Mesa","Epson",
-    "Canon", "HP", "Dell Latitude","Ups Powest","Ups Legrand","Ups Unipower","Otro..."
+    "Canon", "HP", "Dell Latitude","Powest","Legrand","Unipower","Powest Titan",
+    "Apc","Access Poin","Zebra","Hikvision","hikvision", "Ryotel","Hp Laser","ThinkPad",
+    "TP-LINK","MINUTEMAN ","NUROUM","Otro..."
   ];
 
 
@@ -1222,9 +1240,11 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const ubicaciones = [
-    "Admin Fincas", "Gestión Humana", "Tecnología", "Mantenimiento", "Agricultura", "Taller",
+    "Admin Fincas", "Gestión Humana", "Tecnología", "Mantenimiento", "Agricultura FZ", "Taller",
     "Logística", "Porcicultura", "Bioprocesos", "Proyectos", "Planta Extractora",
-    "Planta Balanceados FZ", "Planta Balanceados BARL", "Planta Secamiento FZ", "Planta Secamiento BARL"
+    "Planta Balanceados FZ", "Planta Balanceados BARL", "Planta Secamiento FZ",
+     "Planta Secamiento BARL","Taller SF","Agricultura SF","Agricultura SC",
+     "Ganderia","Calidad","Obra Civil","Salud Integral","Control Interno","Fundacion Pervivir","PLanta Semilla","Otra.."
   ];
 
   const select = document.getElementById('edit-ubicacion');
@@ -1463,7 +1483,7 @@ function agregarRegistro(e) {
   .then(data => {
     console.log("Respuesta del servidor:", data);
     if (data.success) {
-      alert("✅ " + (data.mensaje || "Guardado correctamente"));
+      alert(" " + (data.mensaje || "Guardado correctamente"));
       formRegistro.reset();
       document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
       setTimeout(sincronizarRegistros, 2000);
@@ -2203,7 +2223,7 @@ function verEnProgreso() {
   const resultados = registros.filter(r => r.estado === 'En progreso');
 
   if (resultados.length === 0) {
-    resultadosBusqueda.innerHTML = '<p class="mensaje-vacio">⚠️ No hay registros en Progreosos/p>';
+    resultadosBusqueda.innerHTML = '<p class="mensaje-vacio">⚠️ No hay registros en Progreso</p>';
     return;
   }
 
